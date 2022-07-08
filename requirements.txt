@@ -1,5 +1,5 @@
 Flask==2.1.2
-requests==2.26.0
-requests_oauthlib==1.3.0
+requests==2.28.1
+requests_oauthlib==1.3.1
 grapefruit==0.1a4
 rdflib==6.1.1
