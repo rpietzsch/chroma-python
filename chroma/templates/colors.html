@@ -23,7 +23,9 @@
         </small>
     </form>
     <br />
-
+    {% if msg is not none %}
+        <strong>{{ msg }}</strong><br /><br />
+    {% endif %}
     <table>
         <tr>
             <th>Concept IRI</th>

@@ -7,17 +7,23 @@ import grapefruit
 import rdflib
 import hashlib
 import sys
+import urllib
 
 from flask import Flask, request, render_template
+
 
 def colors_for_concepts(iri, format=None):
     colors = []
     g = rdflib.Graph()
-    if format is not None:
-        g.parse(iri, format=format)
-    else:
-        g.parse(iri)
-
+    msg = ""
+    try:
+        if format is not None:
+            g.parse(iri, format=format)
+        else:
+            g.parse(iri)
+    except BaseException as err:
+        msg = f"Unexpected {err=}, {type(err)=}"
+    
     m = hashlib.md5()
 
     concepts_query = """
@@ -40,12 +46,14 @@ def colors_for_concepts(iri, format=None):
         c = grapefruit.Color.NewFromHsl(h, s, bl)
         colors.append({"rgb": c.html, "concept": str(row.concept), "color_html": str(c.html), "color_hsl": str(c.hsl)})
 
-    #L = ( ( ( 0xFF000 & hash_iri ) % 45 ) + 25 ) # valid values between 0 and 100, we only want between 25 (dark) and 70
-    #a = ( ( ( 0xFF00 & hash_iri ) % 0xFF ) - 128 ) # values between -128 and 127
-    #b = ( ( 0xFF & hash_iri ) - 128 ) # values between -128 and 127
-    #print(f"L a b: {str(L)} {str(a)} {str(b)})
+    '''
+    L = ( ( ( 0xFF000 & hash_iri ) % 45 ) + 25 ) # valid values between 0 and 100, we only want between 25 (dark) and 70
+    a = ( ( ( 0xFF00 & hash_iri ) % 0xFF ) - 128 ) # values between -128 and 127
+    b = ( ( 0xFF & hash_iri ) - 128 ) # values between -128 and 127
+    '''
 
-    return colors
+    return (colors, msg)
+
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -55,6 +63,7 @@ def create_app():
         iri = request.args.get('iri')
         format = request.args.get('format')
         colors = []
+        msg = ""
         format_options = ["guess", "xml", "n3", "ttl", "nt", "trix", "trig", "nquads"]
         if iri is None:
             #iri = "https://raw.githubusercontent.com/schemaorg/schemaorg/main/data/schema.ttl"
@@ -65,10 +74,10 @@ def create_app():
 
         if iri is not None and len(iri) > 0:
             if format is not None and len(format) > 0:
-                colors = colors_for_concepts(iri, format=format)
+                (colors, msg) = colors_for_concepts(iri, format=format)
             else:
-                colors = colors_for_concepts(iri)
+                (colors, msg) = colors_for_concepts(iri)
 
-        return render_template('colors.html', iri=iri, colors=colors, format=format, format_options=format_options)
+        return render_template('colors.html', iri=iri, colors=colors, format=format, format_options=format_options, msg=msg)
 
     return app
