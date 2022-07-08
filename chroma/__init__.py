@@ -7,7 +7,6 @@ import grapefruit
 import rdflib
 import hashlib
 import sys
-import urllib
 
 from flask import Flask, request, render_template
 
@@ -23,13 +22,13 @@ def colors_for_concepts(iri, format=None):
             g.parse(iri)
     except BaseException as err:
         msg = f"Unexpected {err=}, {type(err)=}"
-    
+
     m = hashlib.md5()
 
     concepts_query = """
     SELECT DISTINCT ?concept
     WHERE {
-        ?concept a ?something .
+        ?concept a ?c .
     }
     """
 
