@@ -1,4 +1,4 @@
-name: This a workflow title 
+name: Build and push the docker image
 on: [push] # When pushing to any branch then run this action
 
 # Env variable
