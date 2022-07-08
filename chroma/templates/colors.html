@@ -8,10 +8,19 @@
     <br /><br /><br />
     <form method="get">
         <label for="iri">IRI:</label>
-        <input name="iri" id="iri" value="{{ iri }}" required />
-        <label for="format">Format:</label>
-        <input name="format" id="format" value="{{ format }}" />
-        <input type="submit" value="Go">
+        <input name="iri" id="iri" value="{{ iri }}" size="100" required /> |
+        <label for="format">(optional) format:</label>
+        <select name="format" id="format">
+            {% for o in format_options: %}
+                <option value="{{ o }}" {% if format == o %} selected="true" {% endif %}>{{ o }}</option>
+            {% endfor %}
+        </select> |
+        <input type="submit" value="Go"><br /><br />
+        <small>
+            e.g try:<br />
+            IRI: http://www.w3.org/2002/07/owl# | format: EMPTY/guess<br />
+            IRI: https://raw.githubusercontent.com/schemaorg/schemaorg/main/data/schema.ttl | format: ttl<br />
+        </small>
     </form>
     <br />
 

@@ -55,15 +55,20 @@ def create_app():
         iri = request.args.get('iri')
         format = request.args.get('format')
         colors = []
+        format_options = ["guess", "xml", "n3", "ttl", "nt", "trix", "trig", "nquads"]
         if iri is None:
-            iri = "https://raw.githubusercontent.com/schemaorg/schemaorg/main/data/schema.ttl"
-        if format is None:
-            format = "ttl"
+            #iri = "https://raw.githubusercontent.com/schemaorg/schemaorg/main/data/schema.ttl"
+            iri = "http://www.w3.org/2002/07/owl#"
+
+        if format == "guess":
+            format = None
+
         if iri is not None and len(iri) > 0:
             if format is not None and len(format) > 0:
                 colors = colors_for_concepts(iri, format=format)
             else:
                 colors = colors_for_concepts(iri)
-        return render_template('colors.html', iri=iri, colors=colors, format=format)
+
+        return render_template('colors.html', iri=iri, colors=colors, format=format, format_options=format_options)
 
     return app
