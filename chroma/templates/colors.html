@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Colors{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <br /><br /><br />
+    <form method="get">
+        <label for="iri">IRI:</label>
+        <input name="iri" id="iri" value="{{ iri }}" required />
+        <label for="format">Format:</label>
+        <input name="format" id="format" value="{{ format }}" />
+        <input type="submit" value="Go">
+    </form>
+    <br />
+
+    <table>
+        <tr>
+            <th>Concept IRI</th>
+            <th>HTML/RGB</th>
+            <th>Hsl</th>
+            <th>&nbsp;</th>
+        </tr>
+      {% for c in colors: %}
+        <tr style="border: 3px solid ; border-color: {{ c['rgb'] }} ;">
+            <td style="border: 3px solid ; border-color: {{ c['rgb'] }} ;">
+                {{ c['concept'] }}
+            </td>
+            <td style="border: 3px solid ; border-color: {{ c['rgb'] }} ;">
+                {{ c['color_html'] }}
+            </td>
+            <td style="border: 3px solid ; border-color: {{ c['rgb'] }} ;">
+                {{ c['color_hsl'] }}
+            </td>
+            <td style="background-color: {{ c['rgb'] }} ;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+      {% endfor %}
+    </table>
+{% endblock %}

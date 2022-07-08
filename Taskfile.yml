@@ -1,0 +1,20 @@
+version: '3'
+
+env:
+  FLASK_APP: chroma
+  FLASK_ENV: development
+
+tasks:
+  run:
+    desc: starts the flask app
+    cmds:
+      - flask run
+
+  build:
+    desc: builds and tag docker image
+    vars:
+      version:
+        sh: git describe --always  --dirty
+    cmds:
+      - docker build --platform linux/amd64 -t rpietzsch/chroma-amd64:{{.version}} .
+      - docker build --platform linux/arm64 -t rpietzsch/chroma-arm64:{{.version}} .
