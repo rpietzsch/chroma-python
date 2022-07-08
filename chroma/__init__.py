@@ -1,3 +1,8 @@
+'''
+likewise color calculation and conversion libraries exit in
+- js -> https://github.com/gka/chroma.js
+- java -> https://github.com/neilpanchal/Chroma
+'''
 import grapefruit
 import rdflib
 import hashlib
@@ -26,6 +31,9 @@ def colors_for_concepts(iri, format=None):
     for row in qres:
         m.update(str(row.concept).encode('utf-8'))
         int_digets = int.from_bytes(m.digest(), sys.byteorder)
+
+        # inspired by https://stackoverflow.com/questions/11120840/hash-string-into-rgb-color
+
         h = ((0xFF000 & int_digets) % 360)  # H - hue / color -> 0-360°, we want anything
         s = ((((0xFF00 & int_digets) % 50) + 50) / 100)  # S - saturation -> 0-100%, we want 50-100%
         bl = ((((0xFF & int_digets) % 25) + 50) / 100)  # B/L - brightness/lightness -> 0-100%, we want 50-75%
